@@ -10,11 +10,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
 
-  Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
-  Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
-  Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
-  Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
+  private final double moduleWidth = 0.762;
+  private final double moduleLength = 0.762;
 
+  Translation2d m_frontLeftLocation = new Translation2d(moduleWidth / 2, moduleLength / 2);
+  Translation2d m_frontRightLocation = new Translation2d(moduleWidth / 2, -(moduleLength / 2));
+  Translation2d m_backLeftLocation = new Translation2d(-(moduleWidth / 2), moduleLength / 2);
+  Translation2d m_backRightLocation = new Translation2d(-(moduleWidth / 2), -(moduleLength / 2));
+  
+  // Creating my kinematics object using the module locations
   SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
   
   public Swerve() {}
