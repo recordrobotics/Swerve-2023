@@ -21,6 +21,8 @@ import frc.robot.RobotMap;
 
 public class Swerve extends SubsystemBase {
 
+  public static final double GEAR_RATIO = 1;
+
   // TODO change to correct motor
   private TalonFX LFS_MOTOR = new TalonFX(RobotMap.swerve.LFS_MOTOR_PORT);
   private TalonFX LBS_MOTOR = new TalonFX(RobotMap.swerve.LBS_MOTOR_PORT);
@@ -76,23 +78,23 @@ public class Swerve extends SubsystemBase {
   }
 
   public SwerveModuleState LFState() {
-    return new SwerveModuleState(LFS_MOTOR.getSelectedSensorVelocity(),
-        new Rotation2d(2 * Math.PI * LFD_MOTOR.getSelectedSensorPosition()));
+    return new SwerveModuleState(LFS_MOTOR.getSelectedSensorVelocity() * GEAR_RATIO,
+        new Rotation2d(2 * Math.PI * LFD_MOTOR.getSelectedSensorPosition() * GEAR_RATIO));
   }
 
   public SwerveModuleState LBState() {
-    return new SwerveModuleState(LBS_MOTOR.getSelectedSensorVelocity(),
-        new Rotation2d(2 * Math.PI * LBD_MOTOR.getSelectedSensorPosition()));
+    return new SwerveModuleState(LBS_MOTOR.getSelectedSensorVelocity() * GEAR_RATIO,
+        new Rotation2d(2 * Math.PI * LBD_MOTOR.getSelectedSensorPosition() * GEAR_RATIO));
   }
 
   public SwerveModuleState RFState() {
-    return new SwerveModuleState(RFS_MOTOR.getSelectedSensorVelocity(),
-        new Rotation2d(2 * Math.PI * RFD_MOTOR.getSelectedSensorPosition()));
+    return new SwerveModuleState(RFS_MOTOR.getSelectedSensorVelocity() * GEAR_RATIO,
+        new Rotation2d(2 * Math.PI * RFD_MOTOR.getSelectedSensorPosition() * GEAR_RATIO));
   }
 
   public SwerveModuleState RBState() {
     return new SwerveModuleState(RBS_MOTOR.getSelectedSensorVelocity(),
-        new Rotation2d(2 * Math.PI * RBD_MOTOR.getSelectedSensorPosition()));
+        new Rotation2d(2 * Math.PI * RBD_MOTOR.getSelectedSensorPosition() * GEAR_RATIO));
   }
 
   public void setTarget(ChassisSpeeds _target) {
