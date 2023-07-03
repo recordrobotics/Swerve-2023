@@ -46,7 +46,7 @@ public class Swerve extends SubsystemBase {
 
   private SwerveModuleState[] MOD_TARGETS;
 
-  AHRS _nav = new AHRS(SerialPort.Port.kUSB1);
+  public AHRS _nav = new AHRS(SerialPort.Port.kUSB1);
   SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(kinematics, _nav.getRotation2d());
 
   ChassisSpeeds target;
@@ -98,6 +98,18 @@ public class Swerve extends SubsystemBase {
 
   public void setTarget(ChassisSpeeds _target) {
     target = _target;
+  }
+
+  public double getX() {
+    return _nav.getDisplacementX();
+  }
+
+  public double getY() {
+    return _nav.getDisplacementY();
+  }
+
+  public double getRot() {
+    return _nav.getDisplacementX();
   }
 
   @Override

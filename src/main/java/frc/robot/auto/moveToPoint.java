@@ -9,7 +9,6 @@ import frc.robot.subsystems.Swerve;
 public class moveToPoint extends CommandBase {
 	private Swerve _swerve;
 	private double _speed;
-	private double _y;
 
 	private PIDController _spinPID = new PIDController(S_KP, S_KI, S_KD);;
 	private PIDController _xPID = new PIDController(XY_KP, XY_KI, XY_KD);;
@@ -23,7 +22,6 @@ public class moveToPoint extends CommandBase {
 	private static final double XY_KI = 0.005;
 	private static final double XY_KD = 0;
 
-	private Rotation2d _rot;
 	private static final double tolerance = 0.1;
 
 	public moveToPoint(Swerve swerve, double speed, double x, double y, Rotation2d rot) {
@@ -52,8 +50,8 @@ public class moveToPoint extends CommandBase {
 						* Math.signum(_xPID.calculate(_swerve.getX())),
 				Math.min(Math.abs(_yPID.calculate(_swerve.getY())), _speed)
 						* Math.signum(_xPID.calculate(_swerve.getY())),
-				Math.min(Math.abs(_yPID.calculate(_swerve.getY())), _speed)
-						* Math.signum(_xPID.calculate(_swerve.getY()))));
+				Math.min(Math.abs(_spinPID.calculate(_swerve.getRot())), _speed)
+						* Math.signum(_xPID.calculate(_swerve.getRot()))));
 	}
 
 	/**
@@ -61,8 +59,9 @@ public class moveToPoint extends CommandBase {
 	 */
 	@Override
 	public boolean isFinished() {
-		return _x < tolerance && _x > -tolerance && _y < tolerance && _y > -tolerance && _rot.getRadians() < tolerance
-				&& _y > -tolerance;
+		return _swerve.getX() < tolerance && _swerve.getX() > -tolerance && _swerve.getY() < tolerance
+				&& _swerve.getY() > -tolerance && _swerve.getRot()< tolerance
+				&& _swerve.getRot() > -tolerance;
 	}
 
 	public void end(boolean interrupted) {
