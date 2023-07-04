@@ -105,9 +105,9 @@ public class Swerve extends SubsystemBase {
     MOD_TARGETS = kinematics.toSwerveModuleStates(target);
 
     SwerveModuleState.optimize(MOD_TARGETS[0], LFState().angle);
-    SwerveModuleState.optimize(MOD_TARGETS[1], LFState().angle);
-    SwerveModuleState.optimize(MOD_TARGETS[2], LFState().angle);
-    SwerveModuleState.optimize(MOD_TARGETS[3], LFState().angle);
+    SwerveModuleState.optimize(MOD_TARGETS[1], LBState().angle);
+    SwerveModuleState.optimize(MOD_TARGETS[2], RFState().angle);
+    SwerveModuleState.optimize(MOD_TARGETS[3], RBState().angle);
 
     LFSmotor.set(ControlMode.Velocity, MOD_TARGETS[0].speedMetersPerSecond);
     LBSmotor.set(ControlMode.Velocity, MOD_TARGETS[1].speedMetersPerSecond);
