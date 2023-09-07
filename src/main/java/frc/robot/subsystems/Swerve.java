@@ -67,8 +67,8 @@ public class Swerve extends SubsystemBase {
     directionMotors[0].set(ControlMode.Position, 0);
 
   }
-  
-  //gets
+
+  //gets current module states
   public SwerveModuleState[] modState() {
     SwerveModuleState[] LFState = {
         new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * GEAR_RATIO,
