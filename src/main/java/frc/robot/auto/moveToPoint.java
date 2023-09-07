@@ -40,7 +40,7 @@ public class moveToPoint extends CommandBase {
 	}
 
 	/**
-	 * Open/close claw
+	 * Open/close drive
 	 */
 	@Override
 
