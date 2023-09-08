@@ -68,7 +68,7 @@ public class Swerve extends SubsystemBase {
     directionMotors[0].set(ControlMode.Position, 0);
 
   }
-
+  //gets states of modules
   public SwerveModuleState[] modState() {
     SwerveModuleState[] LFState = {
         new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * GEAR_RATIO,
@@ -102,17 +102,17 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     MOD_TARGETS = kinematics.toSwerveModuleStates(target);
-
+    //optimises angles
     SwerveModuleState.optimize(MOD_TARGETS[0], modState()[0].angle);
     SwerveModuleState.optimize(MOD_TARGETS[1], modState()[1].angle);
     SwerveModuleState.optimize(MOD_TARGETS[2], modState()[2].angle);
     SwerveModuleState.optimize(MOD_TARGETS[3], modState()[3].angle);
-
+    //sets speed
     speedMotors[0].set(ControlMode.Velocity, MOD_TARGETS[0].speedMetersPerSecond);
     speedMotors[1].set(ControlMode.Velocity, MOD_TARGETS[1].speedMetersPerSecond);
     speedMotors[2].set(ControlMode.Velocity, MOD_TARGETS[2].speedMetersPerSecond);
     speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond);
-
+    //sets angles
     directionMotors[0].set(ControlMode.Position, MOD_TARGETS[0].angle.getDegrees() * 256 / 45);
     directionMotors[0].set(ControlMode.Position, MOD_TARGETS[1].angle.getDegrees() * 256 / 45);
     directionMotors[0].set(ControlMode.Position, MOD_TARGETS[2].angle.getDegrees() * 256 / 45);

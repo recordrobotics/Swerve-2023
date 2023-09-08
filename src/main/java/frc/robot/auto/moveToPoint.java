@@ -45,6 +45,18 @@ public class moveToPoint extends CommandBase {
 	@Override
 
 	public void initialize() {
+		//moves based on PID
+		_swerve.setTarget(new ChassisSpeeds(
+				Math.min(Math.abs(_xPID.calculate(_swerve.getX())), _speed)
+						* Math.signum(_xPID.calculate(_swerve.getX())),
+				Math.min(Math.abs(_yPID.calculate(_swerve.getY())), _speed)
+						* Math.signum(_xPID.calculate(_swerve.getY())),
+				Math.min(Math.abs(_spinPID.calculate(_swerve.getRot())), _speed)
+						* Math.signum(_xPID.calculate(_swerve.getRot()))));
+	}
+
+	public void execute() {
+		//moves based on PID
 		_swerve.setTarget(new ChassisSpeeds(
 				Math.min(Math.abs(_xPID.calculate(_swerve.getX())), _speed)
 						* Math.signum(_xPID.calculate(_swerve.getX())),
@@ -59,6 +71,7 @@ public class moveToPoint extends CommandBase {
 	 */
 	@Override
 	public boolean isFinished() {
+		//stops when within tolerance
 		return _swerve.getX() < tolerance && _swerve.getX() > -tolerance && _swerve.getY() < tolerance
 				&& _swerve.getY() > -tolerance && _swerve.getRot()< tolerance
 				&& _swerve.getRot() > -tolerance;
