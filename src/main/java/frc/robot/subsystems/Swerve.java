@@ -20,27 +20,29 @@ public class Swerve extends SubsystemBase {
 
   // TODO change to correct motor
   private TalonFX[] speedMotors = {
-      new TalonFX(RobotMap.swerve.LFS_MOTOR_PORT),
-      new TalonFX(RobotMap.swerve.LBS_MOTOR_PORT),
-      new TalonFX(RobotMap.swerve.RFS_MOTOR_PORT),
-      new TalonFX(RobotMap.swerve.RBS_MOTOR_PORT)
+      new TalonFX(RobotMap.swerve.SPEED_MOTORS[0]),
+      new TalonFX(RobotMap.swerve.SPEED_MOTORS[1]),
+      new TalonFX(RobotMap.swerve.SPEED_MOTORS[2]),
+      new TalonFX(RobotMap.swerve.SPEED_MOTORS[3])
   };
   private TalonFX[] directionMotors = {
-      new TalonFX(RobotMap.swerve.LFD_MOTOR_PORT),
-      new TalonFX(RobotMap.swerve.LBD_MOTOR_PORT),
-      new TalonFX(RobotMap.swerve.RFD_MOTOR_PORT),
-      new TalonFX(RobotMap.swerve.RBD_MOTOR_PORT)
+      new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[0]),
+      new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[1]),
+      new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[2]),
+      new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[3])
   };
   private final double moduleWidth = 0.762;
   private final double moduleLength = 0.762;
 
-  Translation2d m_frontLeftLocation = new Translation2d(moduleWidth / 2, moduleLength / 2);
-  Translation2d m_frontRightLocation = new Translation2d(moduleWidth / 2, -(moduleLength / 2));
-  Translation2d m_backLeftLocation = new Translation2d(-(moduleWidth / 2), moduleLength / 2);
-  Translation2d m_backRightLocation = new Translation2d(-(moduleWidth / 2), -(moduleLength / 2));
+  Translation2d[] locations = {
+    new Translation2d(moduleWidth / 2, moduleLength / 2),
+    new Translation2d(moduleWidth / 2, -(moduleLength / 2)),
+    new Translation2d(-(moduleWidth / 2), moduleLength / 2),
+    new Translation2d(-(moduleWidth / 2), -(moduleLength / 2)),
+  };
 
-  SwerveDriveKinematics kinematics = new SwerveDriveKinematics(m_frontLeftLocation, m_frontRightLocation,
-      m_backLeftLocation, m_backRightLocation);
+  SwerveDriveKinematics kinematics = new SwerveDriveKinematics(locations[0], locations[1],
+      locations[2], locations[3]);
 
   private SwerveModuleState[] MOD_TARGETS;
 
@@ -90,7 +92,7 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     MOD_TARGETS = kinematics.toSwerveModuleStates(target);
-  ` 
+    
   //optimises angle change
     SwerveModuleState.optimize(MOD_TARGETS[0], modState()[0].angle);
     SwerveModuleState.optimize(MOD_TARGETS[1], modState()[1].angle);
