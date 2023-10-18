@@ -16,7 +16,8 @@ import frc.robot.RobotMap;
 
 public class Swerve extends SubsystemBase {
 
-  public static final double GEAR_RATIO = 1;
+  public static final double SPEED_GEAR_RATIO = 1;
+  public static final double DIRECTION_GEAR_RATIO = 1;
 
   // TODO change to correct motor
   private TalonFX[] speedMotors = {
@@ -58,6 +59,7 @@ public class Swerve extends SubsystemBase {
   ChassisSpeeds target;
 
   public Swerve() {
+    
     speedMotors[0].set(ControlMode.Velocity, 0);
     speedMotors[1].set(ControlMode.Velocity, 0);
     speedMotors[2].set(ControlMode.Velocity, 0);
@@ -100,15 +102,15 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState.optimize(MOD_TARGETS[3], modState()[3].angle);
 
   //sets speed/position of the motors
-    speedMotors[0].set(ControlMode.Velocity, MOD_TARGETS[0].speedMetersPerSecond);
-    speedMotors[1].set(ControlMode.Velocity, MOD_TARGETS[1].speedMetersPerSecond);
-    speedMotors[2].set(ControlMode.Velocity, MOD_TARGETS[2].speedMetersPerSecond);
-    speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond);
+    speedMotors[0].set(ControlMode.Velocity, MOD_TARGETS[0].speedMetersPerSecond * SPEED_GEAR_RATIO);
+    speedMotors[1].set(ControlMode.Velocity, MOD_TARGETS[1].speedMetersPerSecond * SPEED_GEAR_RATIO);
+    speedMotors[2].set(ControlMode.Velocity, MOD_TARGETS[2].speedMetersPerSecond * SPEED_GEAR_RATIO);
+    speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond * SPEED_GEAR_RATIO);
 
-    directionMotors[0].set(ControlMode.Position, MOD_TARGETS[0].angle.getDegrees() * 256 / 45);
-    directionMotors[1].set(ControlMode.Position, MOD_TARGETS[1].angle.getDegrees() * 256 / 45);
-    directionMotors[2].set(ControlMode.Position, MOD_TARGETS[2].angle.getDegrees() * 256 / 45);
-    directionMotors[3].set(ControlMode.Position, MOD_TARGETS[3].angle.getDegrees() * 256 / 45);
+    directionMotors[0].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[0].angle.getDegrees() * 256 / 45);
+    directionMotors[1].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[1].angle.getDegrees() * 256 / 45);
+    directionMotors[2].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[2].angle.getDegrees() * 256 / 45);
+    directionMotors[3].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[3].angle.getDegrees() * 256 / 45);
   }
 
   @Override
