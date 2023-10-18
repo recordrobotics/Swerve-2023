@@ -75,14 +75,14 @@ public class Swerve extends SubsystemBase {
   //gets current module states
   public SwerveModuleState[] modState() {
     SwerveModuleState[] LFState = {
-        new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * GEAR_RATIO,
-            new Rotation2d(2 * Math.PI * directionMotors[0].getSelectedSensorPosition() * GEAR_RATIO)),
-        new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity() * GEAR_RATIO,
-            new Rotation2d(2 * Math.PI * directionMotors[1].getSelectedSensorPosition() * GEAR_RATIO)),
-        new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity() * GEAR_RATIO,
-            new Rotation2d(2 * Math.PI * directionMotors[2].getSelectedSensorPosition() * GEAR_RATIO)),
+        new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * SPEED_GEAR_RATIO,
+            new Rotation2d(2 * Math.PI * directionMotors[0].getSelectedSensorPosition() * SPEED_GEAR_RATIO)),
+        new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity() * SPEED_GEAR_RATIO,
+            new Rotation2d(2 * Math.PI * directionMotors[1].getSelectedSensorPosition() * SPEED_GEAR_RATIO)),
+        new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity() * SPEED_GEAR_RATIO,
+            new Rotation2d(2 * Math.PI * directionMotors[2].getSelectedSensorPosition() * SPEED_GEAR_RATIO)),
         new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity(),
-            new Rotation2d(2 * Math.PI * directionMotors[3].getSelectedSensorPosition() * GEAR_RATIO))
+            new Rotation2d(2 * Math.PI * directionMotors[3].getSelectedSensorPosition() * SPEED_GEAR_RATIO))
     };
     return LFState;
   }

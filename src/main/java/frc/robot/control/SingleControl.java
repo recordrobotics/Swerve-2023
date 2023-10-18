@@ -16,14 +16,14 @@ public class SingleControl implements IControlInput {
 	}
 
 	public double getX() {
-		return _gamepad.getLeftX() * maxSpeed / Swerve.GEAR_RATIO;
+		return _gamepad.getLeftX() * maxSpeed;
 	}
 
 	public double getY() {
-		return _gamepad.getLeftY() * maxSpeed / Swerve.GEAR_RATIO;
+		return _gamepad.getLeftY() * maxSpeed;
 	}
 
 	public double getSpin() {
-		return _gamepad.getRightX() * maxSpin / Swerve.GEAR_RATIO;
+		return _gamepad.getRightX() * maxSpin;
 	}
 }
