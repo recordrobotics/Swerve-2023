@@ -6,7 +6,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
@@ -15,9 +18,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
 public class Swerve extends SubsystemBase {
-
+  // todo get constants
   public static final double SPEED_GEAR_RATIO = 1;
   public static final double DIRECTION_GEAR_RATIO = 1;
+  private static final double kp = 0;
+  private static final double ki = 0;
+  private static final double kd = 0;
 
   // TODO change to correct motor
   private TalonFX[] speedMotors = {
@@ -31,6 +37,18 @@ public class Swerve extends SubsystemBase {
       new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[1]),
       new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[2]),
       new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[3])
+  };
+  private CANCoder[] encoders = {
+    new CANCoder(RobotMap.swerve.DEVICE_NUMBER[0]),
+    new CANCoder(RobotMap.swerve.DEVICE_NUMBER[1]),
+    new CANCoder(RobotMap.swerve.DEVICE_NUMBER[2]),
+    new CANCoder(RobotMap.swerve.DEVICE_NUMBER[3])
+  };
+  private PIDController[] dPID = {
+    new PIDController(kp, ki, kd), 
+    new PIDController(kp, ki, kd),
+    new PIDController(kp, ki, kd),
+    new PIDController(kp, ki,  kd)
   };
   private final double moduleWidth = 0.762;
   private final double moduleLength = 0.762;
@@ -60,15 +78,15 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
     
-    speedMotors[0].set(ControlMode.Velocity, 0);
-    speedMotors[1].set(ControlMode.Velocity, 0);
-    speedMotors[2].set(ControlMode.Velocity, 0);
-    speedMotors[3].set(ControlMode.Velocity, 0);
+    speedMotors[0].set(ControlMode.PercentOutput, 0);
+    speedMotors[1].set(ControlMode.PercentOutput, 0);
+    speedMotors[2].set(ControlMode.PercentOutput, 0);
+    speedMotors[3].set(ControlMode.PercentOutput, 0);
 
-    directionMotors[0].set(ControlMode.Position, 0);
-    directionMotors[0].set(ControlMode.Position, 0);
-    directionMotors[0].set(ControlMode.Position, 0);
-    directionMotors[0].set(ControlMode.Position, 0);
+    directionMotors[0].set(ControlMode.PercentOutput, 0);
+    directionMotors[0].set(ControlMode.PercentOutput, 0);
+    directionMotors[0].set(ControlMode.PercentOutput, 0);
+    directionMotors[0].set(ControlMode.PercentOutput, 0);
 
   }
 
@@ -101,16 +119,22 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState.optimize(MOD_TARGETS[2], modState()[2].angle);
     SwerveModuleState.optimize(MOD_TARGETS[3], modState()[3].angle);
 
+  // position PIDs
+    dPID[0].setSetpoint(DIRECTION_GEAR_RATIO * MOD_TARGETS[0].angle.getRadians());
+    dPID[0].setSetpoint(DIRECTION_GEAR_RATIO * MOD_TARGETS[1].angle.getRadians());
+    dPID[2].setSetpoint(DIRECTION_GEAR_RATIO * MOD_TARGETS[2].angle.getRadians());
+    dPID[3].setSetpoint(DIRECTION_GEAR_RATIO * MOD_TARGETS[3].angle.getRadians());
+
   //sets speed/position of the motors
     speedMotors[0].set(ControlMode.Velocity, MOD_TARGETS[0].speedMetersPerSecond * SPEED_GEAR_RATIO);
     speedMotors[1].set(ControlMode.Velocity, MOD_TARGETS[1].speedMetersPerSecond * SPEED_GEAR_RATIO);
     speedMotors[2].set(ControlMode.Velocity, MOD_TARGETS[2].speedMetersPerSecond * SPEED_GEAR_RATIO);
     speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond * SPEED_GEAR_RATIO);
 
-    directionMotors[0].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[0].angle.getDegrees() * 256 / 45);
-    directionMotors[1].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[1].angle.getDegrees() * 256 / 45);
-    directionMotors[2].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[2].angle.getDegrees() * 256 / 45);
-    directionMotors[3].set(ControlMode.Position, DIRECTION_GEAR_RATIO * MOD_TARGETS[3].angle.getDegrees() * 256 / 45);
+    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate(Math.toRadians(encoders[0].getPosition())));
+    directionMotors[1].set(ControlMode.PercentOutput, dPID[1].calculate(Math.toRadians(encoders[1].getPosition())));
+    directionMotors[2].set(ControlMode.PercentOutput, dPID[2].calculate(Math.toRadians(encoders[0].getPosition())));
+    directionMotors[3].set(ControlMode.PercentOutput, dPID[3].calculate(Math.toRadians(encoders[0].getPosition())));
   }
 
   @Override
