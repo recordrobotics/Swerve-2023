@@ -1,7 +1,6 @@
 package frc.robot.control;
 
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.Swerve;
 
 public class SingleControl implements IControlInput {
 

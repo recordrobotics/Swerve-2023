@@ -131,10 +131,10 @@ public class Swerve extends SubsystemBase {
     speedMotors[2].set(ControlMode.Velocity, MOD_TARGETS[2].speedMetersPerSecond * SPEED_GEAR_RATIO);
     speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond * SPEED_GEAR_RATIO);
 
-    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate(Math.toRadians(encoders[0].getPosition())));
-    directionMotors[1].set(ControlMode.PercentOutput, dPID[1].calculate(Math.toRadians(encoders[1].getPosition())));
-    directionMotors[2].set(ControlMode.PercentOutput, dPID[2].calculate(Math.toRadians(encoders[0].getPosition())));
-    directionMotors[3].set(ControlMode.PercentOutput, dPID[3].calculate(Math.toRadians(encoders[0].getPosition())));
+    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate(Math.toRadians(encoders[0].getAbsolutePosition ())));
+    directionMotors[1].set(ControlMode.PercentOutput, dPID[1].calculate(Math.toRadians(encoders[1].getAbsolutePosition ())));
+    directionMotors[2].set(ControlMode.PercentOutput, dPID[2].calculate(Math.toRadians(encoders[0].getAbsolutePosition ())));
+    directionMotors[3].set(ControlMode.PercentOutput, dPID[3].calculate(Math.toRadians(encoders[0].getAbsolutePosition ())));
   }
 
   @Override
