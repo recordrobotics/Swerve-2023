@@ -39,15 +39,16 @@ public class ManualSwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //sets the target speed + angle 
+    // sets the target speed + angle
     angle += (Math.PI / 2.0) * _controls.getSpin();
     _swerve.setTarget(ChassisSpeeds.fromFieldRelativeSpeeds(
-      _controls.getX() * speed, _controls.getY() * speed, Math.PI / 2.0, Rotation2d.fromRadians(angle)));
+        _controls.getX() * speed, _controls.getY() * speed, Math.PI / 2.0, Rotation2d.fromRadians(angle)));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    _swerve.setTarget(new ChassisSpeeds(0, 0, 0));
   }
 
   // Returns true when the command should end.
