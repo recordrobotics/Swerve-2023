@@ -40,12 +40,6 @@ public class Swerve extends SubsystemBase {
       new CANCoder(RobotMap.swerve.DEVICE_NUMBER[2]),
       new CANCoder(RobotMap.swerve.DEVICE_NUMBER[3])
   };
-  private PIDController[] dPID = {
-      new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd),
-      new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd),
-      new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd),
-      new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd)
-  };
   private final double moduleWidth = 0.762;
   private final double moduleLength = 0.762;
 
@@ -61,14 +55,14 @@ public class Swerve extends SubsystemBase {
 
   private SwerveModuleState[] MOD_TARGETS;
 
-  public AHRS _nav = new AHRS(SerialPort.Port.kUSB1);
+  //public AHRS _nav = new AHRS(SerialPort.Port.kUSB1);
   private static final SwerveModulePosition[] startPos = {
       new SwerveModulePosition(),
       new SwerveModulePosition(),
       new SwerveModulePosition(),
       new SwerveModulePosition()
   };
-  SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(kinematics, _nav.getRotation2d(), startPos);
+  //SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(kinematics, _nav.getRotation2d(), startPos);
 
   ChassisSpeeds target;
 
@@ -119,11 +113,6 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState.optimize(MOD_TARGETS[2], modState()[2].angle);
     SwerveModuleState.optimize(MOD_TARGETS[3], modState()[3].angle);
 
-    // position PIDs
-    dPID[0].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * MOD_TARGETS[0].angle.getRadians());
-    dPID[0].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * MOD_TARGETS[1].angle.getRadians());
-    dPID[2].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * MOD_TARGETS[2].angle.getRadians());
-    dPID[3].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * MOD_TARGETS[3].angle.getRadians());
 
     // sets speed/position of the motors
     speedMotors[0].set(ControlMode.Velocity, MOD_TARGETS[0].speedMetersPerSecond * Constants.Swerve.SPEED_GEAR_RATIO);
@@ -131,14 +120,10 @@ public class Swerve extends SubsystemBase {
     speedMotors[2].set(ControlMode.Velocity, MOD_TARGETS[2].speedMetersPerSecond * Constants.Swerve.SPEED_GEAR_RATIO);
     speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond * Constants.Swerve.SPEED_GEAR_RATIO);
 
-    directionMotors[0].set(ControlMode.PercentOutput,
-        dPID[0].calculate(Math.toRadians(encoders[0].getAbsolutePosition())));
-    directionMotors[1].set(ControlMode.PercentOutput,
-        dPID[1].calculate(Math.toRadians(encoders[1].getAbsolutePosition())));
-    directionMotors[2].set(ControlMode.PercentOutput,
-        dPID[2].calculate(Math.toRadians(encoders[0].getAbsolutePosition())));
-    directionMotors[3].set(ControlMode.PercentOutput,
-        dPID[3].calculate(Math.toRadians(encoders[0].getAbsolutePosition())));
+    directionMotors[0].set(ControlMode.Position, MOD_TARGETS[0].angle.getRotations() * Constants.Swerve.DIRECTION_GEAR_RATIO);
+    directionMotors[1].set(ControlMode.Position, MOD_TARGETS[1].angle.getRotations() * Constants.Swerve.DIRECTION_GEAR_RATIO);
+    directionMotors[2].set(ControlMode.Position, MOD_TARGETS[2].angle.getRotations() * Constants.Swerve.DIRECTION_GEAR_RATIO);
+    directionMotors[3].set(ControlMode.Position, MOD_TARGETS[3].angle.getRotations() * Constants.Swerve.DIRECTION_GEAR_RATIO);
   }
 
   @Override
