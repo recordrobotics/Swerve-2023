@@ -110,9 +110,17 @@ public class Swerve extends SubsystemBase {
   @Override
   public void periodic() {
     MOD_TARGETS = kinematics.toSwerveModuleStates(target);
-    dPID[0].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * Math.PI / 2);
-    directionMotors[0].set(ControlMode.PercentOutput,
-        dPID[0].calculate(encoders[0].getAbsolutePosition() * 2 * Math.PI));
+
+    dPID[0].setSetpoint(0.5);
+
+    //directionMotors[0].set(0.1);
+
+    //System.out.println(encoders[0].getAbsolutePosition());
+    //System.out.println(ControlMode.PercentOutput);
+    System.out.println(dPID[0].calculate(encoders[0].getAbsolutePosition()));
+
+    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate(encoders[0].getAbsolutePosition()));
+    //directionMotors[0].set(ControlMode.PercentOutput, 0.2);
 
         SmartDashboard.putNumber("setAngleeeee", MOD_TARGETS[0].angle.getRadians());
         SmartDashboard.putNumber("setVelocity", MOD_TARGETS[0].speedMetersPerSecond);
