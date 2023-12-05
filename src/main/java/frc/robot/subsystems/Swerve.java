@@ -6,14 +6,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
@@ -34,11 +33,11 @@ public class Swerve extends SubsystemBase {
       new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[2]),
       new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[3])
   };
-  private CANCoder[] encoders = {
-      new CANCoder(RobotMap.swerve.DEVICE_NUMBER[0]),
-      new CANCoder(RobotMap.swerve.DEVICE_NUMBER[1]),
-      new CANCoder(RobotMap.swerve.DEVICE_NUMBER[2]),
-      new CANCoder(RobotMap.swerve.DEVICE_NUMBER[3])
+  private DutyCycleEncoder[] encoders = {
+      new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[0]),
+      new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[1]),
+      new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[2]),
+      new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[3])
   };
   private PIDController[] dPID = {
       new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd),
@@ -61,16 +60,15 @@ public class Swerve extends SubsystemBase {
 
   private SwerveModuleState[] MOD_TARGETS;
 
-  public AHRS _nav = new AHRS(SerialPort.Port.kUSB1);
-  private static final SwerveModulePosition[] startPos = {
+  /*private static final SwerveModulePosition[] startPos = {
       new SwerveModulePosition(),
       new SwerveModulePosition(),
       new SwerveModulePosition(),
       new SwerveModulePosition()
-  };
-  SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(kinematics, _nav.getRotation2d(), startPos);
+  };*/
+  //SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(kinematics, _nav.getRotation2d(), startPos);
 
-  ChassisSpeeds target;
+  ChassisSpeeds target = new ChassisSpeeds();
 
   public Swerve() {
 
@@ -119,6 +117,11 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState.optimize(MOD_TARGETS[2], modState()[2].angle);
     SwerveModuleState.optimize(MOD_TARGETS[3], modState()[3].angle);
 
+    SmartDashboard.putNumber("setAngleeeee", MOD_TARGETS[0].angle.getRadians());
+    SmartDashboard.putNumber("setVelocity", MOD_TARGETS[0].speedMetersPerSecond);
+    SmartDashboard.putNumber("angle", Math.toRadians(encoders[0].getAbsolutePosition()));
+    SmartDashboard.putNumber("velocity", speedMotors[0].getMotorOutputPercent());
+
     // position PIDs
     dPID[0].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * MOD_TARGETS[0].angle.getRadians());
     dPID[0].setSetpoint(Constants.Swerve.DIRECTION_GEAR_RATIO * MOD_TARGETS[1].angle.getRadians());
@@ -132,13 +135,13 @@ public class Swerve extends SubsystemBase {
     speedMotors[3].set(ControlMode.Velocity, MOD_TARGETS[3].speedMetersPerSecond * Constants.Swerve.SPEED_GEAR_RATIO);
 
     directionMotors[0].set(ControlMode.PercentOutput,
-        dPID[0].calculate(Math.toRadians(encoders[0].getAbsolutePosition())));
+        dPID[0].calculate(encoders[0].getAbsolutePosition() * 2 * Math.PI));
     directionMotors[1].set(ControlMode.PercentOutput,
-        dPID[1].calculate(Math.toRadians(encoders[1].getAbsolutePosition())));
+        dPID[1].calculate(encoders[1].getAbsolutePosition() * 2 * Math.PI));
     directionMotors[2].set(ControlMode.PercentOutput,
-        dPID[2].calculate(Math.toRadians(encoders[0].getAbsolutePosition())));
+        dPID[2].calculate(encoders[0].getAbsolutePosition() * 2 * Math.PI));
     directionMotors[3].set(ControlMode.PercentOutput,
-        dPID[3].calculate(Math.toRadians(encoders[0].getAbsolutePosition())));
+        dPID[3].calculate(encoders[0].getAbsolutePosition() * 2 * Math.PI));
   }
 
   @Override

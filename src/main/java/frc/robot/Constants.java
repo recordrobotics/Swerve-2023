@@ -20,7 +20,7 @@ public final class Constants {
     public final class Swerve {
         public static final double SPEED_GEAR_RATIO = 1;
         public static final double DIRECTION_GEAR_RATIO = 1;
-        public static final double kp = 0;
+        public static final double kp = 0.04;
         public static final double ki = 0;
         public static final double kd = 0;
     }

@@ -1,28 +1,28 @@
 package frc.robot.control;
 
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class SingleControl implements IControlInput {
 
-	private XboxController _gamepad;
+	private Joystick _gamepad;
 
 	private static final double maxSpeed = 1; // m/s
 
 	private static final double maxSpin = 1; // r/s
 
 	public SingleControl(int port) {
-		_gamepad = new XboxController(port);
+		_gamepad = new Joystick(port);
 	}
 
 	public double getX() {
-		return _gamepad.getLeftX() * maxSpeed;
+		return _gamepad.getX() * maxSpeed;
 	}
 
 	public double getY() {
-		return _gamepad.getLeftY() * maxSpeed;
+		return _gamepad.getY() * maxSpeed;
 	}
 
 	public double getSpin() {
-		return _gamepad.getRightX() * maxSpin;
+		return _gamepad.getTwist() * maxSpin;
 	}
 }
