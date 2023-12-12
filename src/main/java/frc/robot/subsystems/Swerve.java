@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -73,7 +74,7 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
 
-    //dPID[0].setTolerance(5, 10);
+    dPID[0].setTolerance(1);
 
     speedMotors[0].set(ControlMode.PercentOutput, 0);
     speedMotors[1].set(ControlMode.PercentOutput, 0);
@@ -114,7 +115,10 @@ public class Swerve extends SubsystemBase {
   public void periodic() {
     MOD_TARGETS = kinematics.toSwerveModuleStates(target);
 
-    //dPID[0].setSetpoint(0.5);
+
+    dPID[0].setSetpoint(0.5);
+    System.out.println(directionMotors[0].getSelectedSensorPosition() / 2048);
+    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate( directionMotors[0].getSelectedSensorPosition() / 2048 ));
 
     //directionMotors[0].set(0.1);
 
@@ -122,18 +126,18 @@ public class Swerve extends SubsystemBase {
     //System.out.println(ControlMode.PercentOutput);
     //System.out.println(dPID[0].calculate(encoders[0].get()));
 
-    double PIDoutput =  dPID[0].calculate(encoders[0].getAbsolutePosition(), 0.5);
+    //double PIDoutput =  dPID[0].calculate(encoders[0].getAbsolutePosition(), 0.5);
 
-    System.out.println(PIDoutput);
+    //System.out.println(PIDoutput);
 
-    directionMotors[0].set(ControlMode.PercentOutput, PIDoutput);
+    //directionMotors[0].set(ControlMode.PercentOutput, PIDoutput);
     //directionMotors[0].set(ControlMode.PercentOutput, 0.2);
 
-        SmartDashboard.putNumber("setAngleeeee", MOD_TARGETS[0].angle.getRadians());
-        SmartDashboard.putNumber("setVelocity", MOD_TARGETS[0].speedMetersPerSecond);
-        SmartDashboard.putNumber("angle", Math.toRadians(encoders[0].getAbsolutePosition()));
-        SmartDashboard.putNumber("velocity", speedMotors[0].getMotorOutputPercent());
-        SmartDashboard.putNumber("PIDoutput", PIDoutput);
+        //SmartDashboard.putNumber("setAngleeeee", MOD_TARGETS[0].angle.getRadians());
+        //SmartDashboard.putNumber("setVelocity", MOD_TARGETS[0].speedMetersPerSecond);
+        //SmartDashboard.putNumber("angle", Math.toRadians(encoders[0].getAbsolutePosition()));
+        //SmartDashboard.putNumber("velocity", speedMotors[0].getMotorOutputPercent());
+        //SmartDashboard.putNumber("PIDoutput", PIDoutput);
     /* 
     // optimises angle change
     SwerveModuleState.optimize(MOD_TARGETS[0], modState()[0].angle);
