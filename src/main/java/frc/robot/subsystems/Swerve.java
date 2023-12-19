@@ -74,7 +74,7 @@ public class Swerve extends SubsystemBase {
 
   public Swerve() {
 
-    dPID[0].setTolerance(1);
+    dPID[0].setTolerance(0.1);
 
     speedMotors[0].set(ControlMode.PercentOutput, 0);
     speedMotors[1].set(ControlMode.PercentOutput, 0);
@@ -116,9 +116,9 @@ public class Swerve extends SubsystemBase {
     MOD_TARGETS = kinematics.toSwerveModuleStates(target);
 
 
-    dPID[0].setSetpoint(0.5);
-    System.out.println(directionMotors[0].getSelectedSensorPosition() / 2048);
-    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate( directionMotors[0].getSelectedSensorPosition() / 2048 ));
+    dPID[0].setSetpoint(0.5 * 2048);
+    System.out.println(directionMotors[0].getSelectedSensorPosition());
+    directionMotors[0].set(ControlMode.PercentOutput, dPID[0].calculate(directionMotors[0].getSelectedSensorPosition()));
 
     //directionMotors[0].set(0.1);
 
