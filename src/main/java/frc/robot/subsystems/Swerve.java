@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -79,6 +80,11 @@ public class Swerve extends SubsystemBase {
     ChassisSpeeds target = new ChassisSpeeds();
 
     public Swerve() {
+
+        directionMotors[0].configNeutralDeadband(0.001);
+        directionMotors[1].configNeutralDeadband(0.001);
+        directionMotors[2].configNeutralDeadband(0.001);
+        directionMotors[3].configNeutralDeadband(0.001);
         
         encoders[0].setPositionOffset(0.089);
         encoders[1].setPositionOffset(0.416);
@@ -131,18 +137,24 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("0", MOD_TARGETS[0].angle.getRotations());
-        SmartDashboard.putNumber("1", MOD_TARGETS[1].angle.getRotations());
-        SmartDashboard.putNumber("2", MOD_TARGETS[2].angle.getRotations());
-        SmartDashboard.putNumber("3", MOD_TARGETS[3].angle.getRotations());
+        SmartDashboard.putNumber("M0", MOD_TARGETS[0].angle.getRotations());
+        SmartDashboard.putNumber("M1", MOD_TARGETS[1].angle.getRotations());
+        SmartDashboard.putNumber("M2", MOD_TARGETS[2].angle.getRotations());
+        SmartDashboard.putNumber("M3", MOD_TARGETS[3].angle.getRotations());
+
+        SmartDashboard.putNumber("D0", directionMotors[0].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO);
+        SmartDashboard.putNumber("D1", directionMotors[0].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO);
+        SmartDashboard.putNumber("D2", directionMotors[0].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO);
+        SmartDashboard.putNumber("D3", directionMotors[0].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO);
+
 
         MOD_TARGETS = kinematics.toSwerveModuleStates(target);
 
         // position PIDs
-        dPID[0].setSetpoint(MOD_TARGETS[0].angle.getRotations() % 1);
-        dPID[0].setSetpoint(MOD_TARGETS[1].angle.getRotations() % 1);
-        dPID[2].setSetpoint(MOD_TARGETS[2].angle.getRotations() % 1);
-        dPID[3].setSetpoint(MOD_TARGETS[3].angle.getRotations() % 1);
+        dPID[0].setSetpoint(0.3);
+        dPID[0].setSetpoint(0.3);
+        dPID[2].setSetpoint(0.3);
+        dPID[3].setSetpoint(0.3);
 
         // sets speed/position of the motors
         speedMotors[0].set(ControlMode.PercentOutput, MOD_TARGETS[0].speedMetersPerSecond);
