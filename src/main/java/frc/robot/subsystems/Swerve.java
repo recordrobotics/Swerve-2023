@@ -80,7 +80,6 @@ public class Swerve extends SubsystemBase {
         encoders[2].setPositionOffset(0.865);
         encoders[3].setPositionOffset(0.195);
         
-
         speedMotors[0].set(ControlMode.PercentOutput, 0);
         speedMotors[1].set(ControlMode.PercentOutput, 0);
         speedMotors[2].set(ControlMode.PercentOutput, 0);
@@ -102,16 +101,16 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] LFState = {
                 new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                directionMotors[0].getSelectedSensorPosition())),
+                                directionMotors[0].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
                 new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                directionMotors[1].getSelectedSensorPosition())),
+                                directionMotors[1].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
                 new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                directionMotors[2].getSelectedSensorPosition())),
+                                directionMotors[2].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
                 new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity(),
                         new Rotation2d(
-                               directionMotors[3].getSelectedSensorPosition()))
+                                directionMotors[3].getSelectedSensorPosition() / 2048 * 2 * Math.PI))
         };
         return LFState;
     }
