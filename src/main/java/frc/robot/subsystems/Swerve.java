@@ -74,6 +74,12 @@ public class Swerve extends SubsystemBase {
     ChassisSpeeds target = new ChassisSpeeds();
 
     public Swerve() {
+        
+        encoders[0].setPositionOffset(0.991);
+        encoders[1].setPositionOffset(0.135);
+        encoders[2].setPositionOffset(0.584);
+        encoders[3].setPositionOffset(0.805);
+        
 
         speedMotors[0].set(ControlMode.PercentOutput, 0);
         speedMotors[1].set(ControlMode.PercentOutput, 0);
@@ -85,10 +91,10 @@ public class Swerve extends SubsystemBase {
         directionMotors[2].set(ControlMode.PercentOutput, 0);
         directionMotors[3].set(ControlMode.PercentOutput, 0);
 
-        directionMotors[0].setSelectedSensorPosition(encoders[0].getAbsolutePosition() * 2048);
-        directionMotors[1].setSelectedSensorPosition(encoders[1].getAbsolutePosition() * 2048);
-        directionMotors[2].setSelectedSensorPosition(encoders[2].getAbsolutePosition() * 2048);
-        directionMotors[3].setSelectedSensorPosition(encoders[3].getAbsolutePosition() * 2048);
+        directionMotors[0].setSelectedSensorPosition(encoders[0].getAbsolutePosition());
+        directionMotors[1].setSelectedSensorPosition(encoders[1].getAbsolutePosition());
+        directionMotors[2].setSelectedSensorPosition(encoders[2].getAbsolutePosition());
+        directionMotors[3].setSelectedSensorPosition(encoders[3].getAbsolutePosition());
     }
 
     // gets current module states
@@ -120,6 +126,11 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("0", encoders[0].getAbsolutePosition());
+        SmartDashboard.putNumber("1", encoders[1].getAbsolutePosition());
+        SmartDashboard.putNumber("2", encoders[2].getAbsolutePosition());
+        SmartDashboard.putNumber("3", encoders[3].getAbsolutePosition());
+
         MOD_TARGETS = kinematics.toSwerveModuleStates(target);
 
         // optimises angle change
