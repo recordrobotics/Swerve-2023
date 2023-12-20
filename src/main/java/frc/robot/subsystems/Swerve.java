@@ -99,16 +99,16 @@ public class Swerve extends SubsystemBase {
     // gets current module states
     public SwerveModuleState[] modState() {
         SwerveModuleState[] LFState = {
-                new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity(),
+                new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * 10/2048 * 0.29,
                         new Rotation2d(
                                 directionMotors[0].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
-                new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity(),
+                new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity() * 10/2048 * 0.29,
                         new Rotation2d(
                                 directionMotors[1].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
-                new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity(),
+                new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity() * 10/2048 * 0.29,
                         new Rotation2d(
                                 directionMotors[2].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
-                new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity(),
+                new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity() * 10/2048 * 0.29,
                         new Rotation2d(
                                 directionMotors[3].getSelectedSensorPosition() / 2048 * 2 * Math.PI))
         };
