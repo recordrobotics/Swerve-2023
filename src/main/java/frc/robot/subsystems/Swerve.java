@@ -58,7 +58,12 @@ public class Swerve extends SubsystemBase {
     SwerveDriveKinematics kinematics = new SwerveDriveKinematics(locations[0], locations[1],
             locations[2], locations[3]);
 
-    private SwerveModuleState[] MOD_TARGETS;
+    private SwerveModuleState[] MOD_TARGETS = {
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState()
+    };
 
     /*
      * private static final SwerveModulePosition[] startPos = {
@@ -94,6 +99,11 @@ public class Swerve extends SubsystemBase {
         directionMotors[1].setSelectedSensorPosition(encoders[1].getAbsolutePosition() * 2048);
         directionMotors[2].setSelectedSensorPosition(encoders[2].getAbsolutePosition() * 2048);
         directionMotors[3].setSelectedSensorPosition(encoders[3].getAbsolutePosition() * 2048);
+
+        dPID[0].enableContinuousInput(-0.5, 0.5);
+        dPID[1].enableContinuousInput(-0.5, 0.5);
+        dPID[2].enableContinuousInput(-0.5, 0.5);
+        dPID[3].enableContinuousInput(-0.5, 0.5);
     }
 
     // gets current module states
@@ -101,16 +111,16 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] LFState = {
                 new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * 10/2048 * (0.05 * 2 * Math.PI),
                         new Rotation2d(
-                                directionMotors[0].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
+                                directionMotors[0].getSelectedSensorPosition() / 2048 * 2 * Math.PI / Constants.Swerve.DIRECTION_GEAR_RATIO)),
                 new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity() * 10/2048 * (0.05 * 2 * Math.PI),
                         new Rotation2d(
-                                directionMotors[1].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
+                                directionMotors[1].getSelectedSensorPosition() / 2048 * 2 * Math.PI / Constants.Swerve.DIRECTION_GEAR_RATIO)),
                 new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity() * 10/2048 * (0.05 * 2 * Math.PI),
                         new Rotation2d(
-                                directionMotors[2].getSelectedSensorPosition() / 2048 * 2 * Math.PI)),
+                                directionMotors[2].getSelectedSensorPosition() / 2048 * 2 * Math.PI / Constants.Swerve.DIRECTION_GEAR_RATIO)),
                 new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity() * 10/2048 * (0.05 * 2 * Math.PI),
                         new Rotation2d(
-                                directionMotors[3].getSelectedSensorPosition() / 2048 * 2 * Math.PI))
+                                directionMotors[3].getSelectedSensorPosition() / 2048 * 2 * Math.PI / Constants.Swerve.DIRECTION_GEAR_RATIO))
         };
         return LFState;
     }
@@ -121,24 +131,18 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("0", encoders[0].getAbsolutePosition());
-        SmartDashboard.putNumber("1", encoders[1].getAbsolutePosition());
-        SmartDashboard.putNumber("2", encoders[2].getAbsolutePosition());
-        SmartDashboard.putNumber("3", encoders[3].getAbsolutePosition());
+        SmartDashboard.putNumber("0", MOD_TARGETS[0].angle.getRotations());
+        SmartDashboard.putNumber("1", MOD_TARGETS[1].angle.getRotations());
+        SmartDashboard.putNumber("2", MOD_TARGETS[2].angle.getRotations());
+        SmartDashboard.putNumber("3", MOD_TARGETS[3].angle.getRotations());
 
         MOD_TARGETS = kinematics.toSwerveModuleStates(target);
 
-        // optimises angle change
-        SwerveModuleState.optimize(MOD_TARGETS[0], modState()[0].angle);
-        SwerveModuleState.optimize(MOD_TARGETS[1], modState()[1].angle);
-        SwerveModuleState.optimize(MOD_TARGETS[2], modState()[2].angle);
-        SwerveModuleState.optimize(MOD_TARGETS[3], modState()[3].angle);
-
         // position PIDs
-        dPID[0].setSetpoint(MOD_TARGETS[0].angle.getRotations());
-        dPID[0].setSetpoint(MOD_TARGETS[1].angle.getRotations());
-        dPID[2].setSetpoint(MOD_TARGETS[2].angle.getRotations());
-        dPID[3].setSetpoint(MOD_TARGETS[3].angle.getRotations());
+        dPID[0].setSetpoint(MOD_TARGETS[0].angle.getRotations() % 1);
+        dPID[0].setSetpoint(MOD_TARGETS[1].angle.getRotations() % 1);
+        dPID[2].setSetpoint(MOD_TARGETS[2].angle.getRotations() % 1);
+        dPID[3].setSetpoint(MOD_TARGETS[3].angle.getRotations() % 1);
 
         // sets speed/position of the motors
         speedMotors[0].set(ControlMode.PercentOutput, MOD_TARGETS[0].speedMetersPerSecond);
@@ -147,13 +151,13 @@ public class Swerve extends SubsystemBase {
         speedMotors[3].set(ControlMode.PercentOutput, MOD_TARGETS[3].speedMetersPerSecond);
 
         directionMotors[0].set(ControlMode.PercentOutput,
-                dPID[0].calculate(directionMotors[0].getSelectedSensorPosition() / 2048));
+                dPID[0].calculate(directionMotors[0].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO));
         directionMotors[1].set(ControlMode.PercentOutput,
-                dPID[1].calculate(directionMotors[1].getSelectedSensorPosition() / 2048));
+                dPID[1].calculate(directionMotors[1].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO));
         directionMotors[2].set(ControlMode.PercentOutput,
-                dPID[2].calculate(directionMotors[2].getSelectedSensorPosition() / 2048));
+                dPID[2].calculate(directionMotors[2].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO));
         directionMotors[3].set(ControlMode.PercentOutput,
-                dPID[3].calculate(directionMotors[3].getSelectedSensorPosition() / 2048));
+                dPID[3].calculate(directionMotors[3].getSelectedSensorPosition() / 2048 / Constants.Swerve.DIRECTION_GEAR_RATIO));
     }
 
     @Override
