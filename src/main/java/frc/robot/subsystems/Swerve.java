@@ -75,10 +75,10 @@ public class Swerve extends SubsystemBase {
 
     public Swerve() {
         
-        encoders[0].setPositionOffset(0.991);
-        encoders[1].setPositionOffset(0.135);
-        encoders[2].setPositionOffset(0.584);
-        encoders[3].setPositionOffset(0.805);
+        encoders[0].setPositionOffset(0.089);
+        encoders[1].setPositionOffset(0.416);
+        encoders[2].setPositionOffset(0.865);
+        encoders[3].setPositionOffset(0.195);
         
 
         speedMotors[0].set(ControlMode.PercentOutput, 0);
@@ -91,31 +91,27 @@ public class Swerve extends SubsystemBase {
         directionMotors[2].set(ControlMode.PercentOutput, 0);
         directionMotors[3].set(ControlMode.PercentOutput, 0);
 
-        directionMotors[0].setSelectedSensorPosition(encoders[0].getAbsolutePosition());
-        directionMotors[1].setSelectedSensorPosition(encoders[1].getAbsolutePosition());
-        directionMotors[2].setSelectedSensorPosition(encoders[2].getAbsolutePosition());
-        directionMotors[3].setSelectedSensorPosition(encoders[3].getAbsolutePosition());
+        directionMotors[0].setSelectedSensorPosition(encoders[0].getAbsolutePosition() * 2048);
+        directionMotors[1].setSelectedSensorPosition(encoders[1].getAbsolutePosition() * 2048);
+        directionMotors[2].setSelectedSensorPosition(encoders[2].getAbsolutePosition() * 2048);
+        directionMotors[3].setSelectedSensorPosition(encoders[3].getAbsolutePosition() * 2048);
     }
 
     // gets current module states
     public SwerveModuleState[] modState() {
         SwerveModuleState[] LFState = {
-                new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity() * Constants.Swerve.SPEED_GEAR_RATIO,
+                new SwerveModuleState(speedMotors[0].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                2 * Math.PI * directionMotors[0].getSelectedSensorPosition()
-                                        * Constants.Swerve.SPEED_GEAR_RATIO)),
-                new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity() * Constants.Swerve.SPEED_GEAR_RATIO,
+                                directionMotors[0].getSelectedSensorPosition())),
+                new SwerveModuleState(speedMotors[1].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                2 * Math.PI * directionMotors[1].getSelectedSensorPosition()
-                                        * Constants.Swerve.SPEED_GEAR_RATIO)),
-                new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity() * Constants.Swerve.SPEED_GEAR_RATIO,
+                                directionMotors[1].getSelectedSensorPosition())),
+                new SwerveModuleState(speedMotors[2].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                2 * Math.PI * directionMotors[2].getSelectedSensorPosition()
-                                        * Constants.Swerve.SPEED_GEAR_RATIO)),
-                new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity() * Constants.Swerve.SPEED_GEAR_RATIO,
+                                directionMotors[2].getSelectedSensorPosition())),
+                new SwerveModuleState(speedMotors[3].getSelectedSensorVelocity(),
                         new Rotation2d(
-                                2 * Math.PI * directionMotors[3].getSelectedSensorPosition()
-                                        * Constants.Swerve.SPEED_GEAR_RATIO))
+                               directionMotors[3].getSelectedSensorPosition()))
         };
         return LFState;
     }
