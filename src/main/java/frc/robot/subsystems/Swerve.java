@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -58,7 +57,7 @@ public class Swerve extends SubsystemBase {
 
         SwerveDriveKinematics kinematics = new SwerveDriveKinematics(locations[0], locations[1],
                         locations[2], locations[3]);
-
+        
         private SwerveModuleState[] MOD_TARGETS = {
                         new SwerveModuleState(),
                         new SwerveModuleState(),
@@ -77,26 +76,30 @@ public class Swerve extends SubsystemBase {
         // SwerveDriveOdometry m_Odometry = new SwerveDriveOdometry(kinematics,
         // _nav.getRotation2d(), startPos);
 
+        /**
+         * Target Velocity and Angle
+         */
         ChassisSpeeds target = new ChassisSpeeds();
 
         public Swerve() {
-                encoders[0].setPositionOffset(0.089);
-                encoders[1].setPositionOffset(0.416);
-                encoders[2].setPositionOffset(0.865);
-                encoders[3].setPositionOffset(0.195);
+                encoders[0].setPositionOffset( 1 - 0.6255);
+                encoders[1].setPositionOffset(1- 0.4168);
+                encoders[2].setPositionOffset(1-0.8625);
+                encoders[3].setPositionOffset(1-0.6967);
 
-                for(int i = 0; i < encoders.length; i++) {
+                for (int i = 0; i < encoders.length; i++) {
                         directionMotors[i].configNeutralDeadband(0.001);
                         speedMotors[i].set(ControlMode.PercentOutput, 0);
                         directionMotors[i].set(ControlMode.PercentOutput, 0);
-                        directionMotors[i].setSelectedSensorPosition(encoders[0].getAbsolutePosition() * 2048);
+                        directionMotors[i].setSelectedSensorPosition(encoders[i].getAbsolutePosition() * 2048);
                         dPID[i].enableContinuousInput(-0.5, 0.5);
-
                 }
-                
+
         }
 
-        // gets current module states
+        /**
+         * gets current module states
+         *  */ 
         public SwerveModuleState[] modState() {
                 SwerveModuleState[] LFState = {
                                 new SwerveModuleState(
@@ -139,8 +142,10 @@ public class Swerve extends SubsystemBase {
         public void periodic() {
                 MOD_TARGETS = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < MOD_TARGETS.length; i++) {
+                        SmartDashboard.putNumber("ABS Encoder " + i, encoders[i].getAbsolutePosition());
+                        SmartDashboard.putNumber("Relative Encoder " + i, encoders[i].get());
                         SmartDashboard.putNumber("M" + i, MOD_TARGETS[i].angle.getRotations());
-                        SmartDashboard.putNumber("D" + i, directionMotors[i].getSelectedSensorPosition() / 2048
+                        SmartDashboard.putNumber("Direction " + i, directionMotors[i].getSelectedSensorPosition() / 2048
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
                         // position PIDs
                         dPID[i].setSetpoint(MOD_TARGETS[i].angle.getRotations());
