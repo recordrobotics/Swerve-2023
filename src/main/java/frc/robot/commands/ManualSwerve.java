@@ -18,7 +18,7 @@ public class ManualSwerve extends CommandBase {
 
   public ChassisSpeeds target;
   private double angle = 0;
-  private static final double speed = 1;
+  private static final double SPEED = 1;
 
   /**
    * Creates a new ExampleCommand.
@@ -45,7 +45,7 @@ public class ManualSwerve extends CommandBase {
     else
       angle = 0;
     _swerve.setTarget(new ChassisSpeeds(
-        _controls.getX() * speed, _controls.getY() * speed, angle));
+        _controls.getX() * SPEED, _controls.getY() * SPEED, angle));
   }
 
   // Called once the command ends or is interrupted.
