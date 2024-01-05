@@ -39,11 +39,9 @@ public class ManualSwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // sets the target speed + angle
-    if (_controls.setSpin())
-      angle = 0.5;
-    else
-      angle = 0;
+    /**
+     * Target Velocity and Angle
+     */
     _swerve.setTarget(new ChassisSpeeds(
         _controls.getX() * SPEED, _controls.getY() * SPEED, angle));
   }
