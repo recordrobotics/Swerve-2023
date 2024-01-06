@@ -6,21 +6,30 @@ public class SingleControl implements IControlInput {
 
 	private Joystick _gamepad;
 
-	private static final double speedModifier = 0.5;
+	private static final double speedModifier = 0.3;
 
 	public SingleControl(int port) {
 		_gamepad = new Joystick(port);
 	}
 
 	public double getX() {
-		return _gamepad.getX() * speedModifier;
+		double input = _gamepad.getX();
+		if (input >= 0.1 || input <= -0.1) {
+			return input * speedModifier;
+		}
+		return 0;
 	}
 
 	public double getY() {
-		return _gamepad.getY() * speedModifier;
+		double input = _gamepad.getY();
+		if (input >= 0.1 || input <= -0.1) {
+			return input * speedModifier;
+		}
+		return 0;
 	}
 
-	public boolean setSpin() {
-		return _gamepad.getTrigger();
+	public double setSpin() {
+		double input = _gamepad.getTwist();
+		return input * speedModifier;
 	}
 }

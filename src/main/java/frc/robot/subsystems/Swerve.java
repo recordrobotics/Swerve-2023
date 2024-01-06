@@ -28,18 +28,6 @@ public class Swerve extends SubsystemBase {
         private PIDController[] dPID = new PIDController[4];
         private SwerveModuleState[] MOD_TARGETS = new SwerveModuleState[4];
 
-        for(
-        int i = 0;i<4;i++)
-        {
-                // motors
-                speedMotors[i] = new TalonFX(RobotMap.swerve.SPEED_MOTORS[i]);
-                directionMotors[i] = new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[i]);
-                // absolute encoders
-                encoders[i] = new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[i]);
-                // PID
-                dPID[i] = new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd);
-                MOD_TARGETS[i] = new SwerveModuleState();
-        }
 
         Translation2d[] locations = {
                         new Translation2d(moduleWidth / 2, moduleLength / 2),
@@ -68,6 +56,18 @@ public class Swerve extends SubsystemBase {
         ChassisSpeeds target = new ChassisSpeeds();
 
         public Swerve() {
+                for(
+                int i = 0;i<4;i++)
+                {
+                        // motors
+                        speedMotors[i] = new TalonFX(RobotMap.swerve.SPEED_MOTORS[i]);
+                        directionMotors[i] = new TalonFX(RobotMap.swerve.DIRECTION_MOTORS[i]);
+                        // absolute encoders
+                        encoders[i] = new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[i]);
+                        // PID
+                        dPID[i] = new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd);
+                        MOD_TARGETS[i] = new SwerveModuleState();
+                }
                 // enocder ofsets
                 encoders[0].setPositionOffset(1 - 0.6255);
                 encoders[1].setPositionOffset(1 - 0.4168);

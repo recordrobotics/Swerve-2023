@@ -43,7 +43,7 @@ public class ManualSwerve extends CommandBase {
      * Target Velocity and Angle
      */
     _swerve.setTarget(new ChassisSpeeds(
-        _controls.getX() * SPEED, _controls.getY() * SPEED, angle));
+        _controls.getX() * SPEED, _controls.getY() * SPEED, _controls.setSpin()));
   }
 
   // Called once the command ends or is interrupted.
