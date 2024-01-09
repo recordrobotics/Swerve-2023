@@ -18,6 +18,7 @@ package frc.robot;
  */
 public final class Constants {
     public final class Swerve {
+        public static final int NUM_WHEELS = 4;
         public static final double SPEED_GEAR_RATIO = 1;
         public static final double DIRECTION_GEAR_RATIO = 15.43;
         public static final double kp = 3;
