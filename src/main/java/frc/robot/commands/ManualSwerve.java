@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.control.IControlInput;
 import frc.robot.subsystems.Swerve;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -17,7 +16,6 @@ public class ManualSwerve extends CommandBase {
   private IControlInput _controls;
 
   public ChassisSpeeds target;
-  private double angle = 0;
   private static final double SPEED = 1;
 
   /**
