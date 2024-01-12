@@ -23,5 +23,6 @@ public final class Constants {
         public static final double kp = 3;
         public static final double ki = 0;
         public static final double kd = 0;
+        public static final double RELATIVE_ENCODER_RATIO = 2048;
     }
 }
