@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -27,6 +28,8 @@ public class Swerve extends SubsystemBase {
         private DutyCycleEncoder[] encoders = new DutyCycleEncoder[4];
         private PIDController[] dPID = new PIDController[4];
         private SwerveModuleState[] MOD_TARGETS = new SwerveModuleState[4];
+        private AHRS _nav = new AHRS(edu.wpi.first.wpilibj.I2C.Port.kMXP);
+        private double compassOffset;
 
 
         Translation2d[] locations = {
@@ -56,6 +59,9 @@ public class Swerve extends SubsystemBase {
         ChassisSpeeds target = new ChassisSpeeds();
 
         public Swerve() {
+
+                compassOffset = _nav.getCompassHeading();
+
                 for(
                 int i = 0;i<4;i++)
                 {
@@ -83,6 +89,10 @@ public class Swerve extends SubsystemBase {
                         dPID[i].enableContinuousInput(-0.5, 0.5);
                 }
 
+        }
+
+        public Rotation2d getAngle() {
+                return new Rotation2d((_nav.getCompassHeading() - compassOffset) / 180 * Math.PI);
         }
 
         /**
