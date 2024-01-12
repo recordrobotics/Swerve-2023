@@ -22,7 +22,7 @@ public class Swerve extends SubsystemBase {
 
         private final double moduleWidth = 0.762;
         private final double moduleLength = 0.762;
-        private final double absTargetZero[] = {0.901, 0.625, 0.372, 0.699};
+        private final double absToRelative[] = {0.901, 0.625, 0.372, 0.699};
 
         private TalonFX[] speedMotors = new TalonFX[4];
         private TalonFX[] directionMotors = new TalonFX[4];
@@ -62,6 +62,7 @@ public class Swerve extends SubsystemBase {
 
                 compassOffset = _nav.getCompassHeading();
 
+                // Init Motors
                 for (int i = 0; i < 4; i++) {
                         // motors
                         speedMotors[i] = new TalonFX(RobotMap.swerve.SPEED_MOTORS[i]);
@@ -72,21 +73,15 @@ public class Swerve extends SubsystemBase {
                         dPID[i] = new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd);
                         MOD_TARGETS[i] = new SwerveModuleState();
                 }
-                // enocder ofsets
-                // encoders[0].setPositionOffset(1 - 0.6255);
-                // encoders[1].setPositionOffset(1 - 0.4168);
-                // encoders[2].setPositionOffset(1 - 0.8625);
-                // encoders[3].setPositionOffset(1 - 0.6967);
 
                 // motor + PID settings
                 for (int i = 0; i < encoders.length; i++) {
                         directionMotors[i].configNeutralDeadband(0.001);
                         speedMotors[i].set(ControlMode.PercentOutput, 0);
                         directionMotors[i].set(ControlMode.PercentOutput, 0);
-                        
-                        absTargetZero[i] = encoders[i].getAbsolutePosition() - absTargetZero[i];
-                        // double absDifference = encoders[i].getAbsolutePosition() - absTargetZero[i];
-                        // directionMotors[i].setSelectedSensorPosition(absDifference * Constants.Swerve.RELATIVE_ENCODER_RATIO);
+                        absToRelative[i] = (encoders[i].getAbsolutePosition() - absToRelative[i] + 1) % 1;
+                        // double absDifference = encoders[i].getAbsolutePosition() - absToRelative[i];
+                        directionMotors[i].setSelectedSensorPosition(absToRelative[i] * Constants.Swerve.RELATIVE_ENCODER_RATIO);
                         dPID[i].enableContinuousInput(-0.5, 0.5);
                 }
 
@@ -133,7 +128,9 @@ public class Swerve extends SubsystemBase {
                 return LFState;
         }
 
-        // run in manualswerve to get target speed
+        /**
+         *  run in manualswerve to get target speed
+         *  */
         public void setTarget(ChassisSpeeds _target) {
                 target = _target;
         }
@@ -144,9 +141,9 @@ public class Swerve extends SubsystemBase {
                 MOD_TARGETS = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < MOD_TARGETS.length; i++) {
                         SmartDashboard.putNumber("ABS Encoder " + i, encoders[i].getAbsolutePosition());
-                        SmartDashboard.putNumber("Relative Encoder " + i, encoders[i].get());
+                        // SmartDashboard.putNumber("Relative Encoder " + i, encoders[i].get());
                         SmartDashboard.putNumber("M" + i, MOD_TARGETS[i].angle.getRotations());
-                        SmartDashboard.putNumber("Direction " + i, directionMotors[i].getSelectedSensorPosition() / Constants.Swerve.RELATIVE_ENCODER_RATIO
+                        SmartDashboard.putNumber("Relative " + i, directionMotors[i].getSelectedSensorPosition() / Constants.Swerve.RELATIVE_ENCODER_RATIO
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
                         // position PIDs
                         dPID[i].setSetpoint(MOD_TARGETS[i].angle.getRotations());
@@ -154,7 +151,7 @@ public class Swerve extends SubsystemBase {
                         speedMotors[i].set(ControlMode.PercentOutput, MOD_TARGETS[i].speedMetersPerSecond);
                         double simpleRelativeEncoderVal = (directionMotors[i].getSelectedSensorPosition() / Constants.Swerve.RELATIVE_ENCODER_RATIO/ Constants.Swerve.DIRECTION_GEAR_RATIO);
                         directionMotors[i].set(ControlMode.PercentOutput,
-                                        dPID[i].calculate(simpleRelativeEncoderVal - absTargetZero[i]));
+                                        dPID[i].calculate(simpleRelativeEncoderVal));
                 }
         }
 
