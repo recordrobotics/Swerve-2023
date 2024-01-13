@@ -79,7 +79,6 @@ public class Swerve extends SubsystemBase {
                 // motor + PID settings
                 for (int i = 0; i < encoders.length; i++) {
                         SmartDashboard.putNumber("Init Abs" + i, encoders[i].getAbsolutePosition());
-                        SmartDashboard.putNumber("Init Rel" + i, directionMotors[i].getSelectedSensorPosition());
                         directionMotors[i].configNeutralDeadband(0.001);
                         speedMotors[i].set(ControlMode.PercentOutput, 0);
                         directionMotors[i].set(ControlMode.PercentOutput, 0);
