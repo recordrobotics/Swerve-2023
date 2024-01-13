@@ -29,7 +29,8 @@ public class SingleControl implements IControlInput {
 	}
 
 	public double setSpin() {
-		double input = _gamepad.getTwist();
-		return input * speedModifier;
+		// double input = _gamepad.getTwist();
+		// return input * speedModifier;
+		return 0;
 	}
 }
