@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.control.IControlInput;
 import frc.robot.subsystems.Swerve;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -17,8 +16,7 @@ public class ManualSwerve extends CommandBase {
   private IControlInput _controls;
 
   public ChassisSpeeds target;
-  private double angle = 0;
-  private static final double speed = 1;
+  private static final double SPEED = 1;
 
   /**
    * Creates a new ExampleCommand.
@@ -39,10 +37,11 @@ public class ManualSwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // sets the target speed + angle
-    angle += (Math.PI / 2.0) * _controls.getSpin();
+    /**
+     * Target Velocity and Angle
+     */
     _swerve.setTarget(ChassisSpeeds.fromFieldRelativeSpeeds(
-        _controls.getX() * speed, _controls.getY() * speed, Math.PI / 2.0, Rotation2d.fromRadians(angle)));
+        _controls.getX() * SPEED, _controls.getY() * SPEED, _controls.setSpin(), _swerve.getAngle()));
   }
 
   // Called once the command ends or is interrupted.

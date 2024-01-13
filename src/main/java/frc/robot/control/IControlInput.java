@@ -9,5 +9,5 @@ public interface IControlInput {
 
 	double getY();
 
-	double getSpin();
+	double setSpin();
 }

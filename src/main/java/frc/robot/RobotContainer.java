@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ManualSwerve;
@@ -11,6 +15,7 @@ import frc.robot.control.IControlInput;
 import frc.robot.control.SingleControl;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -23,19 +28,35 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Swerve _swerve = new Swerve();
+  private Swerve _swerve;
+  private List<Pair<Subsystem, Command>> _teleopPairs;
 
-  private IControlInput _controlInput = new SingleControl(RobotMap.Control.SINGLE_GAMEPAD);
+  private ManualSwerve _manualSwerve;
 
-  private final ManualSwerve m_autoCommand = new ManualSwerve(_swerve, _controlInput);
+  private IControlInput _controlInput;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // Configure the button bindings
+    _controlInput = new SingleControl(RobotMap.Control.SINGLE_GAMEPAD);
+    _swerve = new Swerve();
     configureButtonBindings();
+    initTeleopCommands();
   }
+
+  private void initTeleopCommands() {
+    _manualSwerve = new ManualSwerve(_swerve, _controlInput);
+    _teleopPairs = new ArrayList<>();
+    _teleopPairs.add(new Pair<Subsystem, Command>(_swerve, _manualSwerve));
+  }
+
+  public void teleopInit() {
+		for (Pair<Subsystem, Command> c : _teleopPairs) {
+			c.getFirst().setDefaultCommand(c.getSecond());
+		}
+	}
 
   /**
    * Use this method to define your button->command mappings. Buttons can be
@@ -48,6 +69,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
   }
 
+  
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -55,6 +78,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return _manualSwerve;
   }
 }
