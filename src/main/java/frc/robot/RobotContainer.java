@@ -10,7 +10,7 @@ import java.util.List;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ManualSwerve;
+import frc.robot.commands.manual.ManualSwerve;
 import frc.robot.control.IControlInput;
 import frc.robot.control.SingleControl;
 import frc.robot.subsystems.Swerve;
