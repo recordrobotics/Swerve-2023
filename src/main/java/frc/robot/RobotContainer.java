@@ -85,6 +85,5 @@ public class RobotContainer {
   }
 
   public void testSwerve() {
-    _swerve.testPeriodic();
   }
 }
