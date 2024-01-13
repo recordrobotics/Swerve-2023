@@ -23,7 +23,7 @@ public class Swerve extends SubsystemBase {
 
         private final double moduleWidth = 0.762;
         private final double moduleLength = 0.762;
-        private final double ABS_AT_ZERO[] = {0.126, 0.411, 0.864, 0.194};
+        private final double ABS_AT_ZERO[] = {0.411, 0.126, 0.864, 0.194};
 
         private TalonFX[] speedMotors = new TalonFX[4];
         private TalonFX[] directionMotors = new TalonFX[4];
@@ -157,6 +157,7 @@ public class Swerve extends SubsystemBase {
                         SmartDashboard.putNumber("M" + i, MOD_TARGETS[i].angle.getRotations());
                         SmartDashboard.putNumber("Relative " + i, directionMotors[i].getSelectedSensorPosition() / Constants.Swerve.RELATIVE_ENCODER_RATIO
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
+                        
                         // position PIDs
                         dPID[i].setSetpoint(MOD_TARGETS[i].angle.getRotations());
                         // sets speed/position of the motors
@@ -176,7 +177,7 @@ public class Swerve extends SubsystemBase {
                         SmartDashboard.putNumber("Target " + motorNum, MOD_TARGETS[motorNum].angle.getRotations());
                         SmartDashboard.putNumber("Relative " + motorNum, directionMotors[motorNum].getSelectedSensorPosition() / Constants.Swerve.RELATIVE_ENCODER_RATIO
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
-                        
+                        SmartDashboard.putNumber("Field Angle", getAngle().getRotations());
                         
                         while(Math.abs((directionMotors[motorNum].getSelectedSensorPosition()/Constants.Swerve.RELATIVE_ENCODER_RATIO/Constants.Swerve.DIRECTION_GEAR_RATIO) % 1)<= .1) {
                                 directionMotors[motorNum].set(ControlMode.PercentOutput, 0.01);
