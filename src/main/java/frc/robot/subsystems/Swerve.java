@@ -20,28 +20,31 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 
 public class Swerve extends SubsystemBase {
-
+        // TODO: This should have a comment explaining how these were obtained.
         private final double moduleWidth = 0.762;
         private final double moduleLength = 0.762;
+
+        // TODO: This should have a comment explaining how these were obtained.
         private final double ABS_AT_ZERO[] = {0.411, 0.126, 0.864, 0.194};
+
         private final int numMotors = Constants.Swerve.NUM_SWERVE_MODS;
         private TalonFX[] speedMotors = new TalonFX[numMotors];
         private TalonFX[] directionMotors = new TalonFX[numMotors];
         private DutyCycleEncoder[] encoders = new DutyCycleEncoder[numMotors];
         private PIDController[] dPID = new PIDController[numMotors];
-        private SwerveModuleState[] MOD_TARGETS = new SwerveModuleState[numMotors];
+        private SwerveModuleState[] modTargets = new SwerveModuleState[numMotors];
         private AHRS _nav = new AHRS(edu.wpi.first.wpilibj.I2C.Port.kMXP);
         private double compassOffset;
 
         Translation2d[] locations = {
-                        new Translation2d(moduleWidth / 2, moduleLength / 2),
-                        new Translation2d(moduleWidth / 2, -(moduleLength / 2)),
-                        new Translation2d(-(moduleWidth / 2), moduleLength / 2),
-                        new Translation2d(-(moduleWidth / 2), -(moduleLength / 2)),
+                new Translation2d(moduleWidth / 2, moduleLength / 2),
+                new Translation2d(moduleWidth / 2, -(moduleLength / 2)),
+                new Translation2d(-(moduleWidth / 2), moduleLength / 2),
+                new Translation2d(-(moduleWidth / 2), -(moduleLength / 2)),
         };
 
-        SwerveDriveKinematics kinematics = new SwerveDriveKinematics(locations[0], locations[1],
-                        locations[2], locations[3]);
+        SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+                locations[0], locations[1], locations[2], locations[3]);
 
         /*
          * private static final SwerveModulePosition[] startPos = {
@@ -60,7 +63,6 @@ public class Swerve extends SubsystemBase {
         ChassisSpeeds target = new ChassisSpeeds();
 
         public Swerve() {
-
                 compassOffset = _nav.getCompassHeading();
 
                 // Init Motors
@@ -72,10 +74,12 @@ public class Swerve extends SubsystemBase {
                         encoders[i] = new DutyCycleEncoder(RobotMap.swerve.DEVICE_NUMBER[i]);
                         // PID
                         dPID[i] = new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd);
-                        MOD_TARGETS[i] = new SwerveModuleState();
+                        modTargets[i] = new SwerveModuleState();
                 }
 
+                // TODO: This should have a comment explaining why it is here.
                 Timer.delay(5);
+
                 // motor + PID settings
                 for (int i = 0; i < numMotors; i++) {
                         SmartDashboard.putNumber("Init Abs" + i, encoders[i].getAbsolutePosition());
@@ -100,12 +104,14 @@ public class Swerve extends SubsystemBase {
                 return (encoders[encoderIndex].getAbsolutePosition() - ABS_AT_ZERO[encoderIndex] + 1) % 1;
         }
 
+        /**
+         * TODO: Add comment
+         */
         public Rotation2d getAngle() {
                 return new Rotation2d((_nav.getCompassHeading() - compassOffset) / 180 * Math.PI);
         }
 
         /**
-         * 
          * @param motorNum index of motor in array
          * @return Relative encoder in rotations
          */
@@ -121,14 +127,15 @@ public class Swerve extends SubsystemBase {
                 SwerveModuleState[] LFState = new SwerveModuleState[numMotors];
                 for (int i = 0; i < numMotors; i++) {
                         LFState[i] = new SwerveModuleState(
-                                        speedMotors[i].getSelectedSensorVelocity() * 10
-                                                        / Constants.Swerve.RELATIVE_ENCODER_RATIO
-                                                        * (0.05 * 2 * Math.PI),
-                                        new Rotation2d(
-                                                        directionMotors[i].getSelectedSensorPosition()
-                                                                        / Constants.Swerve.RELATIVE_ENCODER_RATIO
-                                                                        * 2 * Math.PI
-                                                                        / Constants.Swerve.DIRECTION_GEAR_RATIO));
+                                // TODO: This should be factored out into a utility function with comments.
+                                speedMotors[i].getSelectedSensorVelocity() * 10
+                                                / Constants.Swerve.RELATIVE_ENCODER_RATIO
+                                                * (0.05 * 2 * Math.PI),
+                                new Rotation2d(
+                                                directionMotors[i].getSelectedSensorPosition()
+                                                                / Constants.Swerve.RELATIVE_ENCODER_RATIO
+                                                                * 2 * Math.PI
+                                                                / Constants.Swerve.DIRECTION_GEAR_RATIO));
                 }
                 return LFState;
         }
@@ -143,16 +150,16 @@ public class Swerve extends SubsystemBase {
         @Override
         public void periodic() {
                 // converts target speeds to swerve module angle and rotations
-                MOD_TARGETS = kinematics.toSwerveModuleStates(target);
+                modTargets = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < numMotors; i++) {
-                        SmartDashboard.putNumber("ABS Encoder " + i, encoders[i].getAbsolutePosition());
-                        SmartDashboard.putNumber("Offset Abs Encoder" + i, getOffsetAbs(i));
-                        SmartDashboard.putNumber("M" + i, MOD_TARGETS[i].angle.getRotations());
+                        SmartDashboard.putNumber("Raw Abs Encoder " + i, encoders[i].getAbsolutePosition());
+                        SmartDashboard.putNumber("Off Abs Encoder" + i, getOffsetAbs(i));
+                        SmartDashboard.putNumber("M" + i, modTargets[i].angle.getRotations());
                         SmartDashboard.putNumber("Relative " + i, getRelInRotations(i));
                         // position PIDs
-                        dPID[i].setSetpoint(MOD_TARGETS[i].angle.getRotations());
+                        dPID[i].setSetpoint(modTargets[i].angle.getRotations());
                         // sets speed/position of the motors
-                        speedMotors[i].set(ControlMode.PercentOutput, MOD_TARGETS[i].speedMetersPerSecond);
+                        speedMotors[i].set(ControlMode.PercentOutput, modTargets[i].speedMetersPerSecond);
                         double simpleRelativeEncoderVal = ((directionMotors[i].getSelectedSensorPosition()
                                         / Constants.Swerve.RELATIVE_ENCODER_RATIO)
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
