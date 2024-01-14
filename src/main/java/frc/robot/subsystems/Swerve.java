@@ -63,8 +63,12 @@ public class Swerve extends SubsystemBase {
         ChassisSpeeds target = new ChassisSpeeds();
 
         public Swerve() {
+                _nav.calibrate();
+                _nav.reset();
+                _nav.resetDisplacement();
                 compassOffset = _nav.getCompassHeading();
-
+                SmartDashboard.putBoolean("Nav connected", _nav.isConnected());
+                SmartDashboard.putBoolean("Nav Cal", _nav.isCalibrating());
                 // Init Motors
                 for (int i = 0; i < numMotors; i++) {
                         // motors
@@ -149,8 +153,10 @@ public class Swerve extends SubsystemBase {
 
         @Override
         public void periodic() {
+                SmartDashboard.putBoolean("Nav connected", _nav.isConnected());
+                SmartDashboard.putBoolean("Nav Cal", _nav.isCalibrating());
                 // converts target speeds to swerve module angle and rotations
-                modTargets = kinematics.toSwerveModuleStates(target);
+                MOD_TARGETS = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < numMotors; i++) {
                         SmartDashboard.putNumber("Raw Abs Encoder " + i, encoders[i].getAbsolutePosition());
                         SmartDashboard.putNumber("Off Abs Encoder" + i, getOffsetAbs(i));
