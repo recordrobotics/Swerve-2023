@@ -36,4 +36,8 @@ public class SingleControl implements IControlInput {
 			return input * speedModifier;
 		return 0;
 	}
+
+	public boolean getReset() {
+		return _gamepad.getRawButtonPressed(3);
+	}
 }

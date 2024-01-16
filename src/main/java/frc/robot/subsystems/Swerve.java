@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
 import frc.robot.Constants;
 import frc.robot.RobotMap;
 
@@ -33,8 +35,8 @@ public class Swerve extends SubsystemBase {
         private DutyCycleEncoder[] encoders = new DutyCycleEncoder[numMotors];
         private PIDController[] dPID = new PIDController[numMotors];
         private SwerveModuleState[] modTargets = new SwerveModuleState[numMotors];
-        private AHRS _nav = new AHRS(edu.wpi.first.wpilibj.I2C.Port.kMXP);
-        private double compassOffset;
+        private AHRS _nav = new AHRS(I2C.Port.kOnboard);
+        private double angle0;
 
         Translation2d[] locations = {
                 new Translation2d(moduleWidth / 2, moduleLength / 2),
@@ -66,7 +68,7 @@ public class Swerve extends SubsystemBase {
                 _nav.calibrate();
                 _nav.reset();
                 _nav.resetDisplacement();
-                compassOffset = _nav.getCompassHeading();
+                angle0 = _nav.getAngle();
                 SmartDashboard.putBoolean("Nav connected", _nav.isConnected());
                 SmartDashboard.putBoolean("Nav Cal", _nav.isCalibrating());
                 // Init Motors
@@ -112,7 +114,7 @@ public class Swerve extends SubsystemBase {
          * TODO: Add comment
          */
         public Rotation2d getAngle() {
-                return new Rotation2d((_nav.getCompassHeading() - compassOffset) / 180 * Math.PI);
+                return new Rotation2d((_nav.getAngle() - angle0) / 180 * Math.PI);
         }
 
         /**
@@ -155,8 +157,9 @@ public class Swerve extends SubsystemBase {
         public void periodic() {
                 SmartDashboard.putBoolean("Nav connected", _nav.isConnected());
                 SmartDashboard.putBoolean("Nav Cal", _nav.isCalibrating());
+                SmartDashboard.putNumber("getAngle()", (double)_nav.getAngle());
                 // converts target speeds to swerve module angle and rotations
-                MOD_TARGETS = kinematics.toSwerveModuleStates(target);
+                modTargets = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < numMotors; i++) {
                         SmartDashboard.putNumber("Raw Abs Encoder " + i, encoders[i].getAbsolutePosition());
                         SmartDashboard.putNumber("Off Abs Encoder" + i, getOffsetAbs(i));

@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.control.IControlInput;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -40,6 +41,7 @@ public class ManualSwerve extends CommandBase {
     /**
      * Target Velocity and Angle
      */
+    SmartDashboard.putBoolean("Reset:", _controls.getReset());
     _swerve.setTarget(ChassisSpeeds.fromFieldRelativeSpeeds(
         _controls.getX() * SPEED, _controls.getY() * SPEED, _controls.setSpin(), _swerve.getAngle()));
   }
