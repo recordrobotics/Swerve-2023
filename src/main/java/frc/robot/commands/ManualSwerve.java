@@ -42,8 +42,11 @@ public class ManualSwerve extends CommandBase {
      * Target Velocity and Angle
      */
     SmartDashboard.putBoolean("Reset:", _controls.getReset());
+    if (_controls.getReset()) {
+      _swerve.resetAngle();
+    }
     _swerve.setTarget(ChassisSpeeds.fromFieldRelativeSpeeds(
-        _controls.getX() * SPEED, _controls.getY() * SPEED, _controls.setSpin(), _swerve.getAngle()));
+        _controls.getX() * SPEED, -_controls.getY() * SPEED, -_controls.setSpin(), _swerve.getAngle()));
   }
 
   // Called once the command ends or is interrupted.

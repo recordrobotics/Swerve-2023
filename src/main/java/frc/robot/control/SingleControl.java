@@ -38,6 +38,6 @@ public class SingleControl implements IControlInput {
 	}
 
 	public boolean getReset() {
-		return _gamepad.getRawButtonPressed(3);
+		return _gamepad.getRawButton(3);
 	}
 }

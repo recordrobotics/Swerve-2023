@@ -114,7 +114,7 @@ public class Swerve extends SubsystemBase {
          * TODO: Add comment
          */
         public Rotation2d getAngle() {
-                return new Rotation2d((_nav.getAngle() - angle0) / 180 * Math.PI);
+                return new Rotation2d(-(_nav.getAngle() - angle0) / 180 * Math.PI);
         }
 
         /**
@@ -151,6 +151,13 @@ public class Swerve extends SubsystemBase {
          */
         public void setTarget(ChassisSpeeds _target) {
                 target = _target;
+        }
+
+        /**
+         * Resets robot field frame angle
+         */
+        public void resetAngle() {
+                angle0 = _nav.getAngle();
         }
 
         @Override
