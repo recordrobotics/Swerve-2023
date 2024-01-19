@@ -10,6 +10,7 @@ import java.util.List;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.RobotMap.swerve;
 import frc.robot.commands.manual.ManualSwerve;
 import frc.robot.control.IControlInput;
 import frc.robot.control.SingleControl;
@@ -58,6 +59,8 @@ public class RobotContainer {
 		}
 	}
 
+
+
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -79,5 +82,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return _manualSwerve;
+  }
+
+  public void testSwerve() {
   }
 }

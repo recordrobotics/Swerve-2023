@@ -13,7 +13,8 @@ public class SingleControl implements IControlInput {
 	}
 
 	public double getX() {
-		double input = _gamepad.getX();
+		// Robot and Joystick axises are flipped
+		double input = _gamepad.getY();
 		if (input >= 0.1 || input <= -0.1) {
 			return input * speedModifier;
 		}
@@ -21,7 +22,8 @@ public class SingleControl implements IControlInput {
 	}
 
 	public double getY() {
-		double input = _gamepad.getY();
+		// Robot and Joystick axises are flipped
+		double input = _gamepad.getX();
 		if (input >= 0.1 || input <= -0.1) {
 			return input * speedModifier;
 		}
@@ -30,6 +32,12 @@ public class SingleControl implements IControlInput {
 
 	public double setSpin() {
 		double input = _gamepad.getTwist();
-		return input * speedModifier;
+		if (input >= 0.1 || input <= -0.1)
+			return input * speedModifier;
+		return 0;
+	}
+
+	public boolean getReset() {
+		return _gamepad.getRawButton(3);
 	}
 }
