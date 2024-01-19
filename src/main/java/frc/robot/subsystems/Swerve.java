@@ -35,7 +35,7 @@ public class Swerve extends SubsystemBase {
         private DutyCycleEncoder[] encoders = new DutyCycleEncoder[numMotors];
         private PIDController[] dPID = new PIDController[numMotors];
         private SwerveModuleState[] modTargets = new SwerveModuleState[numMotors];
-        private AHRS _nav = new AHRS(I2C.Port.kOnboard);
+        private AHRS _nav = new AHRS(SerialPort.Port.kUSB1);
         private double angle0;
 
         Translation2d[] locations = {
