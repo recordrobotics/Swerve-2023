@@ -117,6 +117,10 @@ public class Swerve extends SubsystemBase {
                 return new Rotation2d(-(_nav.getAngle() - angle0) / 180 * Math.PI);
         }
 
+        public double getCompassHeading() {
+                return _nav.getCompassHeading();
+        }
+
         /**
          * @param motorNum index of motor in array
          * @return Relative encoder in rotations
