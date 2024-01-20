@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.can.BaseTalonPIDSetConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -81,6 +83,9 @@ public class Swerve extends SubsystemBase {
                         // PID
                         dPID[i] = new PIDController(Constants.Swerve.kp, Constants.Swerve.ki, Constants.Swerve.kd);
                         modTargets[i] = new SwerveModuleState();
+                        speedMotors[i].config_kP(0, Constants.Swerve.skp);
+                        speedMotors[i].config_kI(0, Constants.Swerve.ski);
+                        speedMotors[i].config_kD(0, Constants.Swerve.skd);
                 }
 
                 // TODO: This should have a comment explaining why it is here.
@@ -175,7 +180,7 @@ public class Swerve extends SubsystemBase {
                         // position PIDs
                         dPID[i].setSetpoint(modTargets[i].angle.getRotations());
                         // sets speed/position of the motors
-                        speedMotors[i].set(ControlMode.PercentOutput, modTargets[i].speedMetersPerSecond);
+                        speedMotors[i].set(ControlMode.Velocity, modTargets[i].speedMetersPerSecond);
                         double simpleRelativeEncoderVal = ((directionMotors[i].getSelectedSensorPosition()
                                         / Constants.Swerve.RELATIVE_ENCODER_RATIO)
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
