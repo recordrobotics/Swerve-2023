@@ -118,7 +118,8 @@ public class Swerve extends SubsystemBase {
         }
 
         public double getCompassHeading() {
-                return _nav.getCompassHeading();
+                System.out.println(_nav.getCompassHeading());
+                return (double)_nav.getCompassHeading();
         }
 
         /**
@@ -169,7 +170,7 @@ public class Swerve extends SubsystemBase {
                 SmartDashboard.putBoolean("Nav connected", _nav.isConnected());
                 SmartDashboard.putBoolean("Nav Cal", _nav.isCalibrating());
                 SmartDashboard.putNumber("getAngle()", (double)_nav.getAngle());
-                SmartDashboard.putNumber("getCompassHeading()", (float)_nav.getCompassHeading());
+                SmartDashboard.putNumber("Compass", getCompassHeading());
                 // converts target speeds to swerve module angle and rotations
                 modTargets = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < numMotors; i++) {
