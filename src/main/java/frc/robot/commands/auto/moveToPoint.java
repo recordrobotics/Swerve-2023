@@ -1,4 +1,4 @@
-package frc.robot.auto;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -45,6 +45,11 @@ public class moveToPoint extends CommandBase {
 	@Override
 
 	public void initialize() {
+		
+	}
+
+	public void execute() {
+		//moves based on PID
 		_swerve.setTarget(new ChassisSpeeds(
 				Math.min(Math.abs(_xPID.calculate(_swerve.getX())), _speed)
 						* Math.signum(_xPID.calculate(_swerve.getX())),
@@ -59,6 +64,7 @@ public class moveToPoint extends CommandBase {
 	 */
 	@Override
 	public boolean isFinished() {
+		//stops when within tolerance
 		return _swerve.getX() < tolerance && _swerve.getX() > -tolerance && _swerve.getY() < tolerance
 				&& _swerve.getY() > -tolerance && _swerve.getRot()< tolerance
 				&& _swerve.getRot() > -tolerance;

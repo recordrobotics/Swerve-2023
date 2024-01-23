@@ -2,11 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.manual;
 
 import frc.robot.control.IControlInput;
 import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
@@ -16,6 +17,7 @@ public class ManualSwerve extends CommandBase {
   private IControlInput _controls;
 
   public ChassisSpeeds target;
+  private static final double SPEED = 1;
 
   /**
    * Creates a new ExampleCommand.
@@ -36,12 +38,21 @@ public class ManualSwerve extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _swerve.setTarget(new ChassisSpeeds(_controls.getX(), _controls.getY(), _controls.getSpin()));
+    /**
+     * Target Velocity and Angle
+     */
+    SmartDashboard.putBoolean("Reset:", _controls.getReset());
+    if (_controls.getReset()) {
+      _swerve.resetAngle();
+    }
+    _swerve.setTarget(ChassisSpeeds.fromFieldRelativeSpeeds(
+        _controls.getX() * SPEED, -_controls.getY() * SPEED, -_controls.setSpin(), _swerve.getAngle()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    _swerve.setTarget(new ChassisSpeeds(0, 0, 0));
   }
 
   // Returns true when the command should end.
