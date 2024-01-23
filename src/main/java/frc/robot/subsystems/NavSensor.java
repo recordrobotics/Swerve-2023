@@ -32,6 +32,21 @@ public class NavSensor extends SubsystemBase {
 		return Units.degreesToRadians(-1*roll);
 	}
 
+	public double[] getDisplacement() {
+		// Gets displacements
+		double displacementX = (double)_nav.getDisplacementX();
+		double displacementY = (double)_nav.getDisplacementY();
+		double displacementZ = (double)_nav.getDisplacementZ();
+
+		// Adds displacements to an array
+		double[] displacement = {displacementX, displacementY, displacementZ};
+		
+		// Returns displacement
+		return displacement;
+
+	}
+
+
 	public double getYaw() {
 		double yaw = _nav.getYaw();
 		return Units.degreesToRadians(-1*yaw);
