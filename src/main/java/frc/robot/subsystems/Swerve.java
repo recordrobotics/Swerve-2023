@@ -185,6 +185,9 @@ public class Swerve extends SubsystemBase {
                         double simpleRelativeEncoderVal = ((directionMotors[i].getSelectedSensorPosition()
                                         / Constants.Swerve.RELATIVE_ENCODER_RATIO)
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
+                        
+                        modTargets[i] = SwerveModuleState.optimize(modTargets[i], getAngle());
+
                         directionMotors[i].set(ControlMode.PercentOutput,
                                         dPID[i].calculate(simpleRelativeEncoderVal));
                 }
