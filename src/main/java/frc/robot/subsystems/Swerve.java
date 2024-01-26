@@ -176,12 +176,15 @@ public class Swerve extends SubsystemBase {
                 // converts target speeds to swerve module angle and rotations
                 modTargets = kinematics.toSwerveModuleStates(target);
                 for (int i = 0; i < numMotors; i++) {
+                        // Optimize before using values
+                        modTargets[i] = SwerveModuleState.optimize(modTargets[i], getAngle());
+
                         SmartDashboard.putNumber("Raw Abs Encoder " + i, encoders[i].getAbsolutePosition());
                         SmartDashboard.putNumber("Off Abs Encoder" + i, getOffsetAbs(i));
                         SmartDashboard.putNumber("M" + i, modTargets[i].angle.getRotations());
                         SmartDashboard.putNumber("Relative " + i, getRelInRotations(i));
                         // position PIDs
-                        dPID[i].setSetpoint(modTargets[i].angle.getRotations());
+                        dPID[i].setSetpoint(modTargets[i].angle.getRotations());//POSSIBLE SOURCE OF ERROR
                         sPID[i].setSetpoint(modTargets[i].speedMetersPerSecond);
                         // sets speed/position of the motors
                         speedMotors[i].set(ControlMode.PercentOutput,
@@ -192,7 +195,6 @@ public class Swerve extends SubsystemBase {
                                         / Constants.Swerve.RELATIVE_ENCODER_RATIO)
                                         / Constants.Swerve.DIRECTION_GEAR_RATIO);
 
-                        modTargets[i] = SwerveModuleState.optimize(modTargets[i], getAngle());
 
                         directionMotors[i].set(ControlMode.PercentOutput,
                                         dPID[i].calculate(simpleRelativeEncoderVal));

@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
       "DutyCycleEncoder[2]": {
         "header": {
@@ -20,6 +25,16 @@
         "header": {
           "open": true
         }
+      },
+      "navX-Sensor[0]": {
+        "header": {
+          "open": true
+        }
+      }
+    },
+    "RoboRIO": {
+      "RoboRIO Input": {
+        "open": true
       }
     }
   },
@@ -34,6 +49,23 @@
     },
     "Retained Values": {
       "open": false
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
+    }
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "height": 835
+        }
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
