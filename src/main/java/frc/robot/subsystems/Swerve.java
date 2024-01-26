@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+// Imports 
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -22,11 +24,11 @@ import frc.robot.Constants;
 import frc.robot.RobotMap;
 
 public class Swerve extends SubsystemBase {
-        // TODO: This should have a comment explaining how these were obtained.
-        private final double moduleWidth = 0.762;
-        private final double moduleLength = 0.762;
+        // Width from wheel sensor 
+        private final double moduleWidth = 0.59; // originally 0.762
+        private final double moduleLength = 0.59; // originally 0.762
 
-        // TODO: This should have a comment explaining how these were obtained.
+        // Absolute encoder offsets that we tested
         private final double ABS_AT_ZERO[] = { 0.411, 0.126, 0.864, 0.194 };
 
         private final int numMotors = Constants.Swerve.NUM_SWERVE_MODS;
